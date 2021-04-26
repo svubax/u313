@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <title>Admin panel</title>
+</head>
+<body>
+<section>
+    <div class="container-fluid bg-dark">
+        <div class="row">
+            <div class="col-10 pl-3 mt-3">
+                <p class="h5" style="color: white">
+                    <span class="font-weight-bold" id="user-top-email">E-mail</span> with roles:
+                    <span id="user-top-role">Role</span>
+                </p>
+            </div>
+            <div class="col-2 pr-2 mt-2">
+                <form method="post" action="/logout">
+                    <button type="submit" class="btn btn-link float-right" style="color: grey">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container-fluid">
+        <div class="row vh-100">
+            <div class="col-2 px-0 mt-3 bg-white">
+                <a class="btn btn-primary btn-block text-left" href="/admin">Admin</a>
+                <a class="btn btn-link btn-block text-left" href="/user">User</a>
+            </div>
+            <div class="col-10 px-5 mt-2 bg-light">
+                <div class="row">
+                    <p class="h2">Admin panel</p>
+                </div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab"
+                           aria-controls="users" aria-selected="true">Users table</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="new-user-tab" data-toggle="tab" href="#new-user" role="tab"
+                           aria-controls="new-user" aria-selected="false">New User</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+                        <div class="card flex-fill">
+                            <div class="card-header h5">
+                                All users
+                            </div>
+                            <div class="card-body bg-white">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="users-table">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="new-user" role="tabpanel" aria-labelledby="new-user-tab">
+                        <div class="card flex-fill">
+                            <div class="card-header h5">
+                                Add new user
+                            </div>
+                        </div>
+                        <div class="card-body bg-white text-center">
+                            <div class="col-4 offset-4">
+                                <form class="font-weight-bold" id="new-user-form" name="new-user-form">
+                                    <div class="form-group">
+                                        <label for="name-add">First name</label>
+                                        <input class="form-control" id="name-add" name="name" type="text"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="surname-add">Last name</label>
+                                        <input class="form-control" id="surname-add" name="surname" type="text"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age-add">Age</label>
+                                        <input class="form-control" id="age-add" name="age" type="number"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email-add">Email</label>
+                                        <input class="form-control" id="email-add" name="email" type="email"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password-add">Password</label>
+                                        <input class="form-control" id="password-add" name="password" type="text"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="select-role">Role</label>
+                                        <select class="custom-select" size="2" id="select-role" name="roles" multiple>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-success" form="new-user-form" type="submit">Add new user
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <!-- Modal Edit User-->
+    <div class="modal fade" id="edit-modal" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-6 offset-3 text-center font-weight-bold">
+                    <form id="edit-user-form">
+                        <div class="form-group">
+                            <label for="edit-user-id">ID</label>
+                            <input class="form-control" id="edit-user-id" name="id" type="number" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-user-name">First name</label>
+                            <input class="form-control" id="edit-user-name" name="name" type="text"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-user-surname">Last name</label>
+                            <input class="form-control" id="edit-user-surname" name="surname" type="text"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-user-age">Age</label>
+                            <input class="form-control" id="edit-user-age" name="age" type="number"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-user-email">Email</label>
+                            <input class="form-control" id="edit-user-email" name="email" type="email"/>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="edit-user-password" name="password" type="hidden"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-user-role">Role</label>
+                            <select class="form-control" id="edit-user-role" name="roles" size="2" multiple>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" form="edit-user-form" class="btn btn-danger">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Delete User-->
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-6 offset-3 text-center font-weight-bold">
+                    <form id="delete-user-form">
+                        <div class="form-group">
+                            <label for="delete-user-id">ID</label>
+                            <input class="form-control" id="delete-user-id" type="number" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="delete-user-name">First name</label>
+                            <input class="form-control" id="delete-user-name" type="text" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="delete-user-surname">Last name</label>
+                            <input class="form-control" id="delete-user-surname" type="text" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="delete-user-age">Age</label>
+                            <input class="form-control" id="delete-user-age" type="number" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="delete-user-email">Email</label>
+                            <input class="form-control" id="delete-user-email" type="email" disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="delete-user-role">Role</label>
+                            <select class="form-control" id="delete-user-role" size="2" multiple disabled>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" form="delete-user-form" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/script.js"></script>
+<script th:inline="javascript">const principal = [[${user}]]</script>
+<script>
+    //Заполнение таблицы пользователей
+    function fillUserTable() {
+        fetch(`http://localhost:8080/api/user/all`)
+            .then(response => response.json())
+            .then(data => {
+                let userTable = document.getElementById("users-table")
+                userTable.innerHTML = ""
+                for (const user of data) {
+                    let tr = document.createElement('tr')
+                    tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.surname}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>`
+                    let tdRole = document.createElement('td')
+                    tdRole.innerText = user.roles.map(role => role.name).join(" ")
+                    tr.appendChild(tdRole)
+                    let editButton = document.createElement('td')
+                    editButton.innerHTML = `<button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#edit-modal" data-user-id="${user.id}">Edit</button>`
+                    tr.appendChild(editButton)
+                    let deleteButton = document.createElement('td')
+                    deleteButton.innerHTML = `<button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#delete-modal" data-user-id="${user.id}">Delete</button>`
+                    tr.appendChild(deleteButton)
+                    userTable.appendChild(tr)
+                }
+            })
+            .catch(err => console.error(err))
+    }
+    //Вызов модального окна удаления пользователя
+    $("#delete-modal").on("show.bs.modal", function (event) {
+        let button = $(event.relatedTarget)
+        const id = button.data("user-id")
+        let modal = $(this)
+        fetch(`http://localhost:8080/api/user/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                modal.find("#delete-user-id").val(data.id)
+                modal.find("#delete-user-name").val(data.name)
+                modal.find("#delete-user-surname").val(data.surname)
+                modal.find("#delete-user-age").val(data.age)
+                modal.find("#delete-user-email").val(data.email)
+                modal.find("#delete-user-role").empty()
+                for (const role of data.roles) {
+                    modal.find("#delete-user-role").append(`<option value="${role.name}">${role.name}</option>`)
+                }
+            })
+            .catch(err => console.error(err))
+        const form = document.getElementById("delete-user-form")
+        form.onsubmit = function (event) {
+            event.preventDefault()
+            fetch(`/api/user/${id}`, {
+                method: "DELETE"
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("URL not found")
+                    }
+                    modal.modal("hide")
+                    fillUserTable()
+                })
+                .catch(error => console.error(error))
+        }
+    })
+    //Вызов модального окна редактирования пользователя
+    $("#edit-modal").on("show.bs.modal", function (event) {
+        let button = $(event.relatedTarget)
+        const id = button.data("user-id")
+        let modal = $(this)
+        fetch(`http://localhost:8080/api/user/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                modal.find("#edit-user-id").val(data.id)
+                modal.find("#edit-user-name").val(data.name)
+                modal.find("#edit-user-surname").val(data.surname)
+                modal.find("#edit-user-age").val(data.age)
+                modal.find("#edit-user-email").val(data.email)
+                modal.find("#edit-user-password").val(data.password)
+                const rolesElem = modal.find("#edit-user-role").empty()
+                const userRoles = data.roles.map(role => role.name)
+                getRoles().then(roles => {
+                    roles.map(role => rolesElem.append(new Option(role.name, role.name, false, userRoles.includes(role.name))))
+                })
+            })
+            .catch(err => console.error(err))
+        const formEditUser = document.getElementById("edit-user-form")
+        formEditUser.onsubmit = (event) => {
+            event.preventDefault()
+            const values = readFromForm(formEditUser)
+            getRoles()
+                .then(roles => values.roles = roles.filter(role => values.roles.includes(role.name)))
+                .then(() => fetch("/api/user", {
+                        method: "PATCH",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(values)
+                    })
+                )
+                .then(response => {
+                    console.log(response)
+                    if (!response.ok) {
+                        throw new Error("User not updated")
+                    }
+                    modal.modal("hide")
+                    fillUserTable()
+                })
+                .catch(err => console.error(err))
+        }
+    })
+    //Подготовка формы для добавления нового пользователя
+    function fillNewUserForm() {
+        const formNewUser = document.getElementById("new-user-form")
+        getRoles().then(roles => roles.map(role => formNewUser.roles.appendChild(new Option(role.name, role.name))))
+        formNewUser.onsubmit = (event) => {
+            event.preventDefault()
+            const values = readFromForm(formNewUser)
+            getRoles()
+                .then(roles => values.roles = roles.filter(role => values.roles.includes(role.name)))
+                .then(() => fetch("/api/user", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(values)
+                    })
+                )
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("User not added")
+                    }
+                    formNewUser.reset()
+                    fillUserTable()
+                })
+                .catch(err => console.error(err))
+        }
+    }
+    addTopInfo(principal)
+    fillNewUserForm()
+    fillUserTable()
+</script>
+</body>
+</html>
