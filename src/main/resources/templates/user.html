@@ -75,23 +75,9 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-<script src="/script.js"></script>
 <script th:inline="javascript">const principal = [[${user}]]</script>
+<script src="/script.js"></script>
 <script>
-    //Вывод информации о пользователе в таблицу
-    function aboutUser(user){
-        let elem = document.getElementById("user-id")
-        elem.innerText = user.id
-        elem = elem.nextElementSibling
-        elem.innerHTML = user.name
-        elem = elem.nextElementSibling
-        elem.innerHTML = user.surname
-        elem = elem.nextElementSibling
-        elem.innerHTML = user.age
-        elem = elem.nextElementSibling
-        elem.innerHTML = user.email
-        elem.nextElementSibling.innerHTML = user.roles.map(role => role.name).join(" ")
-    }
     aboutUser(principal)
     addTopInfo(principal)
 </script>
